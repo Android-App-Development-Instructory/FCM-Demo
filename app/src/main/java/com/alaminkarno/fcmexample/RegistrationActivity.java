@@ -28,10 +28,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private EditText emailET,passwordET;
     private Button loginBTN,signupBTN;
-
-    String email, password;
+    private String email, password;
     private FirebaseAuth mAuth;
-    DatabaseReference mDatabaseRef;
+    private DatabaseReference mDatabaseRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

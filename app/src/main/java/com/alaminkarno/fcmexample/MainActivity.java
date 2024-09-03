@@ -16,7 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
+import com.alaminkarno.fcmexample.helpers.NotificationHelper;
 import com.alaminkarno.fcmexample.utils.AppConstant;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,12 +29,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView tokenTV;
-
     private FirebaseAuth mAuth;
-    DatabaseReference userRef;
+    private DatabaseReference userRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Token Found!!!", Toast.LENGTH_SHORT).show();
 
             } else {
-                Log.d("FCM", task.getException().toString());
+                Log.d("FCM", Objects.requireNonNull(task.getException()).toString());
                 tokenTV.setText(task.getException().toString());
             }
         });
@@ -94,31 +97,10 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     void showNotification() {
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, AppConstant.CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_baseline_notifications_active_24)
-                .setContentTitle("Notification")
-                .setContentText("This is our test notification")
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Much longer text that cannot fit one line..."))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            ActivityCompat.requestPermissions(this,new String[] {android.Manifest.permission.POST_NOTIFICATIONS},1);
-            return;
-        }
-        managerCompat.notify(1, builder.build());
-
+        NotificationHelper.displayNotification(this,"Hello","How are You ?");
     }
 
-    void createNotificationChannel(){
+    void createNotificationChannel() {
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
 
